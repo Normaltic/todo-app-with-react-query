@@ -1,9 +1,12 @@
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./pages/Route";
+
 function App() {
   return (
-    <div>
-      <h1>Todo App</h1>
-    </div>
-  )
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
