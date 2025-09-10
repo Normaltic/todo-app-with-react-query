@@ -1,10 +1,13 @@
 import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./pages/Route";
+import ReactQueryProvider from "./contexts/ReactQueryProvider";
 
 function App() {
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <ReactQueryProvider>
+        <AppRoutes />
+      </ReactQueryProvider>
     </BrowserRouter>
   );
 }

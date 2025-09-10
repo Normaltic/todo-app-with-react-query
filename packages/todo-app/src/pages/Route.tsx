@@ -5,11 +5,13 @@ import TodoDetail from "./TodoDetail";
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      <Route path="/" element={<TodoList />} />
-      <Route path="/add" element={<TodoAdd />} />
-      <Route path="/todos/:id" element={<TodoDetail />} />
-    </Routes>
+    <div className="w-full max-w-xl mx-auto p-4">
+      <Routes>
+        <Route path="/" element={<TodoList />} />
+        <Route path="/add" element={<TodoAdd />} />
+        <Route path="/todos/:id" element={<TodoDetail />} />
+      </Routes>
+    </div>
   );
 };
 
