@@ -13,7 +13,7 @@ export const updateTodoDone = async (
   id: number,
   payload: UpdateTodoDonePayload
 ): Promise<Todo> => {
-  const response = await fetch(`http://localhost:8080/todos/${id}/done`, {
+  const response = await fetch(`/api/todos/${id}/done`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",

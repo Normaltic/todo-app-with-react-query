@@ -6,7 +6,7 @@ export interface Todo {
 }
 
 export const getTodos = async (): Promise<Todo[]> => {
-  const response = await fetch("http://localhost:8080/todos");
+  const response = await fetch("/api/todos");
   if (!response.ok) {
     throw new Error("Failed to fetch todos");
   }

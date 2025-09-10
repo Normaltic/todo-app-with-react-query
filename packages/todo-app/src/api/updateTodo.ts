@@ -14,7 +14,7 @@ export const updateTodo = async (
   id: number,
   payload: UpdateTodoPayload
 ): Promise<Todo> => {
-  const response = await fetch(`http://localhost:8080/todos/${id}`, {
+  const response = await fetch(`/api/todos/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

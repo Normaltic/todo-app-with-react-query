@@ -12,12 +12,12 @@ export interface AddTodoPayload {
 }
 
 export const addTodo = async (payload: AddTodoPayload): Promise<Todo> => {
-  const response = await fetch("http://localhost:8080/todos", {
+  const response = await fetch("/api/todos", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   });
   if (!response.ok) {
     throw new Error("Failed to add todo");

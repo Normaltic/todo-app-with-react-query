@@ -1,5 +1,5 @@
 export const deleteTodo = async (id: number): Promise<void> => {
-  const response = await fetch(`http://localhost:8080/todos/${id}`, {
+  const response = await fetch(`/api/todos/${id}`, {
     method: "DELETE",
   });
   if (!response.ok) {
