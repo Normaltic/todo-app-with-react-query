@@ -10,18 +10,36 @@ export const TODOS: Todo[] = [
     id: 1,
     title: "블로그 1편 글 쓰기",
     description: "react-query 기본 학습 방법에 대한 블로그 글 쓰기",
-    done: false,
+    done: false
   },
   {
     id: 2,
     title: "코딩 하기",
     description: "블로그 글 용 예제 코드 작성하기",
-    done: false,
+    done: false
   },
   {
     id: 3,
     title: "블로그 2편 목차 정리하기",
     description: "react-query 추가 기능에 대한 블로그 목차 정리하기",
-    done: false,
+    done: false
   },
+  {
+    id: 4,
+    title: "산책하기",
+    description: "산책 레쓰고",
+    done: false
+  },
+  {
+    id: 5,
+    title: "블로그 3편 목차 정리하기",
+    description: "react-query Next.js 적용에 대한 블로그 목차 정리하기",
+    done: false
+  },
+  {
+    id: 6,
+    title: "빨래하기",
+    description: "빨래하기",
+    done: false
+  }
 ];

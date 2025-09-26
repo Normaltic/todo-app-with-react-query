@@ -1,18 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getTodos } from "../api/getTodos";
 import TodoCard from "../components/TodoCard";
+import { useState } from "react";
+import Pagination from "../components/Pagination";
 
 function TodoList() {
-  const { data: todos = [], isFetching } = useQuery({
-    queryKey: ["todos"],
-    queryFn: () => getTodos()
-  });
+  const [page, setPage] = useState(1);
 
-  if (isFetching) {
-    return (
-      <div className="flex justify-center items-center h-40">Loading...</div>
-    );
-  }
+  const { data: { todos, totalPages } = { todos: [], totalPages: 0 } } =
+    useQuery({
+      queryKey: ["todos", page],
+      queryFn: () => getTodos({ page }),
+      placeholderData: keepPreviousData
+    });
 
   return (
     <section className="flex flex-col gap-4">
@@ -24,6 +24,7 @@ function TodoList() {
           done={todo.done}
         />
       ))}
+      <Pagination current={page} total={totalPages} onPageChange={setPage} />
     </section>
   );
 }

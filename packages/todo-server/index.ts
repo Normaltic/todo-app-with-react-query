@@ -10,7 +10,15 @@ app.use(express.json());
 
 // Get all todos
 app.get("/todos", (req, res) => {
-  res.json(todos);
+  const page = parseInt(req.query.page as string, 10) || 1;
+  const pageSize = 5;
+  const totalPages = Math.ceil(todos.length / pageSize);
+  const paginatedTodos = todos.slice((page - 1) * pageSize, page * pageSize);
+
+  res.json({
+    todos: paginatedTodos,
+    totalPages,
+  });
 });
 
 // Get a single todo by id

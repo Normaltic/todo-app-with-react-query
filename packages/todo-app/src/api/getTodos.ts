@@ -5,8 +5,16 @@ export interface Todo {
   done: boolean;
 }
 
-export const getTodos = async (): Promise<Todo[]> => {
-  const response = await fetch("/api/todos");
+export const getTodos = async ({
+  page = 1
+}: {
+  page?: number;
+} = {}): Promise<{
+  todos: Todo[];
+  totalPages: number;
+}> => {
+  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate network delay
+  const response = await fetch(`/api/todos?page=${page}`);
   if (!response.ok) {
     throw new Error("Failed to fetch todos");
   }
