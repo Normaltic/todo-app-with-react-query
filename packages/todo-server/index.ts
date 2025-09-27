@@ -44,7 +44,7 @@ app.post("/todos", (req, res) => {
     description,
     done: typeof done === 'boolean' ? done : false,
   };
-  todos.push(newTodo);
+  todos.unshift(newTodo);
   res.status(201).json(newTodo);
 });
 
