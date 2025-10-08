@@ -81,7 +81,18 @@ app.patch("/todos/:id/done", (req, res) => {
 });
 
 // Delete a todo by id
-app.delete("/todos/:id", (req, res) => {
+app.delete("/todos/:id", async (req, res) => {
+  // delay to simulate network latency
+  let canceled = false;
+
+  req.on("close", () => {
+    canceled = true;
+  });
+
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
+  if (canceled) return;
+
   const id = parseInt(req.params.id, 10);
   const todoIndex = todos.findIndex((t) => t.id === id);
   if (todoIndex === -1) {
