@@ -1,12 +1,14 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { getTodos } from "../api/getTodos";
 import TodoCard from "../components/TodoCard";
-import { useState } from "react";
 import Pagination from "../components/Pagination";
-import { Link } from "react-router-dom";
 import Button from "../components/Button";
 
 function TodoList() {
+  const navigate = useNavigate();
+
   const [page, setPage] = useState(1);
 
   const { data: { todos, totalPages } = { todos: [], totalPages: 0 } } =
@@ -30,6 +32,7 @@ function TodoList() {
           title={todo.title}
           description={todo.description}
           done={todo.done}
+          onClick={() => navigate(`/todos/${todo.id}`)}
         />
       ))}
       <Pagination current={page} total={totalPages} onPageChange={setPage} />
