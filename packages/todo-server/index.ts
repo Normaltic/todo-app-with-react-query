@@ -11,13 +11,13 @@ app.use(express.json());
 // Get all todos
 app.get("/todos", (req, res) => {
   const page = parseInt(req.query.page as string, 10) || 1;
-  const pageSize = 5;
+  const pageSize = parseInt(req.query.pageSize as string, 10) || 5;
   const totalPages = Math.ceil(todos.length / pageSize);
   const paginatedTodos = todos.slice((page - 1) * pageSize, page * pageSize);
 
   res.json({
     todos: paginatedTodos,
-    totalPages,
+    totalPages
   });
 });
 
@@ -42,7 +42,7 @@ app.post("/todos", (req, res) => {
     id: todos.length > 0 ? Math.max(...todos.map((t) => t.id)) + 1 : 1,
     title,
     description,
-    done: typeof done === 'boolean' ? done : false,
+    done: typeof done === "boolean" ? done : false
   };
   todos.unshift(newTodo);
   res.status(201).json(newTodo);
@@ -73,7 +73,7 @@ app.patch("/todos/:id/done", (req, res) => {
     return;
   }
   const { done } = req.body;
-  if (typeof done !== 'boolean') {
+  if (typeof done !== "boolean") {
     return res.status(400).send("'done' property must be a boolean");
   }
   todos[todoIndex] = { ...todos[todoIndex], done };
