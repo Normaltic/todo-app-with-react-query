@@ -8,6 +8,7 @@ import { getTodos } from "../api/getTodos";
 import { getTodo } from "../api/getTodo";
 import TodoCard from "../components/TodoCard";
 import Button from "../components/Button";
+import Checkbox from "../components/Checkbox";
 
 const combineQueries = (
   results: UseQueryResult<Awaited<ReturnType<typeof getTodo>>>[]
@@ -57,18 +58,13 @@ function TodoSelect() {
       ) : (
         <div className="mb-4">
           {todosData?.todos.map((todo) => (
-            <div key={todo.id} className="flex items-center">
-              <input
-                type="checkbox"
-                id={`todo-${todo.id}`}
-                checked={selectedTodoIds.includes(todo.id)}
-                onChange={() => handleCheckboxChange(todo.id)}
-                className="mr-2"
-              />
-              <label
-                htmlFor={`todo-${todo.id}`}
-              >{`[${todo.id}] ${todo.title}`}</label>
-            </div>
+            <Checkbox
+              key={todo.id}
+              id={`todo-${todo.id}`}
+              label={`[${todo.id}] ${todo.title}`}
+              checked={selectedTodoIds.includes(todo.id)}
+              onChange={() => handleCheckboxChange(todo.id)}
+            />
           ))}
         </div>
       )}
