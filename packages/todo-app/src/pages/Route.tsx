@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import TodoList from "./TodoList";
 import TodoAdd from "./TodoAdd";
 import TodoDetail from "./TodoDetail";
+import TodoSelect from "./TodoSelect";
 
 const AppRoutes = () => {
   return (
@@ -10,6 +11,7 @@ const AppRoutes = () => {
         <Route path="/" element={<TodoList />} />
         <Route path="/add" element={<TodoAdd />} />
         <Route path="/todos/:id" element={<TodoDetail />} />
+        <Route path="/select" element={<TodoSelect />} />
       </Routes>
     </div>
   );

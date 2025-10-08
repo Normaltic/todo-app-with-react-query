@@ -6,14 +6,13 @@ export interface Todo {
 }
 
 export const getTodos = async ({
-  page = 1
-}: {
-  page?: number;
-} = {}): Promise<{
+  page = 1,
+  pageSize = 5,
+}: { page?: number; pageSize?: number; } = {}): Promise<{
   todos: Todo[];
   totalPages: number;
 }> => {
-  const response = await fetch(`/api/todos?page=${page}`);
+  const response = await fetch(`/api/todos?page=${page}&pageSize=${pageSize}`);
   if (!response.ok) {
     throw new Error("Failed to fetch todos");
   }
