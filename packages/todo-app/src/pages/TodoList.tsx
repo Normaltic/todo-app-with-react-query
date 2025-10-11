@@ -1,14 +1,12 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getTodos } from "../api/getTodos";
 import TodoCard from "../components/TodoCard";
 import Pagination from "../components/Pagination";
 import Button from "../components/Button";
 
 function TodoList() {
-  const navigate = useNavigate();
-
   const [page, setPage] = useState(1);
 
   const { data: { todos, totalPages } = { todos: [], totalPages: 0 } } =
@@ -27,13 +25,13 @@ function TodoList() {
         </Link>
       </div>
       {todos.map((todo) => (
-        <TodoCard
-          key={todo.id}
-          title={todo.title}
-          description={todo.description}
-          done={todo.done}
-          onClick={() => navigate(`/todos/${todo.id}`)}
-        />
+        <Link key={todo.id} to={`/todos/${todo.id}`}>
+          <TodoCard
+            title={todo.title}
+            description={todo.description}
+            done={todo.done}
+          />
+        </Link>
       ))}
       <Pagination current={page} total={totalPages} onPageChange={setPage} />
     </section>
