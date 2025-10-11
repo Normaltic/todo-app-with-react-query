@@ -8,8 +8,8 @@ export interface Todo {
 export const TODOS: Todo[] = [
   {
     id: 1,
-    title: "블로그 1편 글 쓰기",
-    description: "react-query 기본 학습 방법에 대한 블로그 글 쓰기",
+    title: "블로그 2편 글 쓰기",
+    description: "react-query 추가 기능에 대한 블로그 글쓰기",
     done: false
   },
   {
@@ -20,8 +20,8 @@ export const TODOS: Todo[] = [
   },
   {
     id: 3,
-    title: "블로그 2편 목차 정리하기",
-    description: "react-query 추가 기능에 대한 블로그 목차 정리하기",
+    title: "블로그 3편 목차 정리하기",
+    description: "react-query Next.js 적용에 대한 블로그 목차 정리하기",
     done: false
   },
   {
@@ -32,8 +32,8 @@ export const TODOS: Todo[] = [
   },
   {
     id: 5,
-    title: "블로그 3편 목차 정리하기",
-    description: "react-query Next.js 적용에 대한 블로그 목차 정리하기",
+    title: "청소하기",
+    description: "청소하기",
     done: false
   },
   {
