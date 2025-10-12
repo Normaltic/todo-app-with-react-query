@@ -1,9 +1,14 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { getTodo } from "../api/getTodo";
 import { deleteTodo } from "../api/deleteTodo";
 import Button from "../components/Button";
 import useCancellableMutation from "../hooks/useCancellableMutation";
+import ToggleSwitch from "../components/ToggleSwitch";
+import {
+  updateTodoDone,
+  type UpdateTodoDonePayload
+} from "../api/updateTodoDone";
 
 function TodoDetail() {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +34,23 @@ function TodoDetail() {
     }
   });
 
+  const updateDoneMutation = useMutation({
+    mutationFn: ({
+      id,
+      payload
+    }: {
+      id: number;
+      payload: UpdateTodoDonePayload;
+    }) => updateTodoDone(id, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todo", Number(id)] });
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    },
+    onError: (error) => {
+      console.error("Failed to update todo:", error);
+    }
+  });
+
   const handleDelete = () => {
     if (id) {
       deleteMutation.mutate(Number(id));
@@ -39,11 +61,17 @@ function TodoDetail() {
     deleteMutation.cancel();
   };
 
+  const handleToggleDone = () => {
+    if (todo) {
+      updateDoneMutation.mutate({ id: todo.id, payload: { done: !todo.done } });
+    }
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (!todo) return <div>Todo not found</div>;
 
   return (
-    <div className="p-4 relative mt-52">
+    <div className="p-4 relative">
       <div className="flex justify-between items-center mb-4">
         <div className="w-32">
           <Button onClick={() => navigate("/")}>Back to List</Button>
@@ -61,13 +89,15 @@ function TodoDetail() {
 
       <div className="bg-white shadow-md rounded-lg p-6">
         <h1 className="text-2xl font-bold mb-2">{todo.title}</h1>
-        <p
-          className={`text-sm font-semibold mb-4 ${
-            todo.done ? "text-green-600" : "text-yellow-600"
-          }`}
-        >
-          {todo.done ? "Done" : "Todo"}
-        </p>
+        <div className="mb-4">
+          <ToggleSwitch
+            id="todo-done"
+            label={todo.done ? "Done" : "Todo"}
+            checked={todo.done}
+            onChange={handleToggleDone}
+            disabled={updateDoneMutation.isPending}
+          />
+        </div>
         <p className="text-gray-700 whitespace-pre-wrap">{todo.description}</p>
       </div>
       {deleteMutation.isPending && (
