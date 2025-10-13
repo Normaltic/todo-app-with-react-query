@@ -5,20 +5,20 @@ import { deleteTodo } from "../api/deleteTodo";
 import Button from "../components/Button";
 import useCancellableMutation from "../hooks/useCancellableMutation";
 import ToggleSwitch from "../components/ToggleSwitch";
-import {
-  updateTodoDone,
-  type UpdateTodoDonePayload
-} from "../api/updateTodoDone";
+import { updateTodoDone, type Todo } from "../api/updateTodoDone";
 
 function TodoDetail() {
-  const { id } = useParams<{ id: string }>();
+  const params = useParams<{ id: string }>();
+  const id = Number(params.id);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data: todo, isLoading } = useQuery({
-    queryKey: ["todo", Number(id)],
-    queryFn: () => getTodo(Number(id)),
-    enabled: !!id
+    queryKey: ["todo", id],
+    queryFn: () => getTodo(id),
+    enabled: !!id,
+    staleTime: 1000, // 5 minutes
+    refetchOnWindowFocus: true
   });
 
   const deleteMutation = useCancellableMutation({
@@ -35,25 +35,50 @@ function TodoDetail() {
   });
 
   const updateDoneMutation = useMutation({
-    mutationFn: ({
-      id,
-      payload
-    }: {
-      id: number;
-      payload: UpdateTodoDonePayload;
-    }) => updateTodoDone(id, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todo", Number(id)] });
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    mutationKey: ["updateTodoDone", id],
+    mutationFn: (done: boolean) => updateTodoDone(id, { done }),
+    onMutate: async (done) => {
+      await queryClient.cancelQueries({ queryKey: ["todos"] });
+      await queryClient.cancelQueries({ queryKey: ["todo", id] });
+
+      const previousTodo = queryClient.getQueryData<Todo>(["todo", id]);
+
+      if (previousTodo) {
+        queryClient.setQueryData<Todo>(["todo", id], {
+          ...previousTodo,
+          done
+        });
+      }
+
+      queryClient.setQueryData<Todo[]>(["todos"], (old) =>
+        old?.map((todo) => (todo.id === id ? { ...todo, done } : todo))
+      );
+
+      return { previousTodo };
     },
-    onError: (error) => {
-      console.error("Failed to update todo:", error);
+    onError: (err, _, context) => {
+      const previousTodo = context?.previousTodo;
+      if (previousTodo) {
+        queryClient.setQueryData(["todo", id], previousTodo);
+        queryClient.setQueryData<Todo[]>(["todos"], (old) =>
+          old?.map((todo) => (todo?.id === id ? previousTodo : todo))
+        );
+      }
+      console.error("Failed to update todo:", err);
+    },
+    onSettled: () => {
+      if (
+        queryClient.isMutating({ mutationKey: ["updateTodoDone", id] }) === 1
+      ) {
+        queryClient.invalidateQueries({ queryKey: ["todos"] });
+        queryClient.invalidateQueries({ queryKey: ["todo", id] });
+      }
     }
   });
 
   const handleDelete = () => {
     if (id) {
-      deleteMutation.mutate(Number(id));
+      deleteMutation.mutate(id);
     }
   };
 
@@ -63,7 +88,7 @@ function TodoDetail() {
 
   const handleToggleDone = () => {
     if (todo) {
-      updateDoneMutation.mutate({ id: todo.id, payload: { done: !todo.done } });
+      updateDoneMutation.mutate(!todo.done);
     }
   };
 
@@ -95,7 +120,6 @@ function TodoDetail() {
             label={todo.done ? "Done" : "Todo"}
             checked={todo.done}
             onChange={handleToggleDone}
-            disabled={updateDoneMutation.isPending}
           />
         </div>
         <p className="text-gray-700 whitespace-pre-wrap">{todo.description}</p>
