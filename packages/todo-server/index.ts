@@ -65,7 +65,10 @@ app.put("/todos/:id", (req, res) => {
 });
 
 // Update the done status of a todo by id
-app.patch("/todos/:id/done", (req, res) => {
+app.patch("/todos/:id/done", async (req, res) => {
+  // delay to simulate network latency
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   const id = parseInt(req.params.id, 10);
   const todoIndex = todos.findIndex((t) => t.id === id);
   if (todoIndex === -1) {
