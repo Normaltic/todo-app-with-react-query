@@ -21,6 +21,32 @@ app.get("/todos", (req, res) => {
   });
 });
 
+// Get todos for infinite scroll
+app.get("/todos/infinite", (req, res) => {
+  const cursor = parseInt(req.query.cursor as string, 10) || 0;
+  const limit = parseInt(req.query.limit as string, 10) || 5;
+
+  const startIndex = cursor ? todos.findIndex((t) => t.id === cursor) + 1 : 0;
+
+  if (cursor && startIndex === 0) {
+    return res.json({
+      todos: [],
+      nextCursor: null
+    });
+  }
+
+  const paginatedTodos = todos.slice(startIndex, startIndex + limit);
+  const hasMore = todos.length > startIndex + limit;
+  const nextCursor = hasMore
+    ? paginatedTodos[paginatedTodos.length - 1].id
+    : null;
+
+  res.json({
+    todos: paginatedTodos,
+    nextCursor
+  });
+});
+
 // Get a single todo by id
 app.get("/todos/:id", (req, res) => {
   const id = parseInt(req.params.id, 10);
