@@ -34,7 +34,10 @@ function TodoList() {
 
   return (
     <section className="flex flex-col gap-4">
-      <div className="flex justify-end">
+      <div className="flex justify-between">
+        <Link to="/infinite">
+          <Button>Infinite list</Button>
+        </Link>
         <Link to="/add">
           <Button>+ Add Todo</Button>
         </Link>
